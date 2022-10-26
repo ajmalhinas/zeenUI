@@ -1,0 +1,3 @@
+2022-10-18 21:50:55,450 Ignored	Logout_1				 Steps file not found: C:\Zeen\sampleTests\Logout_1\Logout_1.csv 
+2022-10-18 21:50:55,462 Ignored	QueryOptimization				 Steps file not found: C:\Zeen\sampleTests\QueryOptimization\QueryOptimization.csv 
+2022-10-18 21:51:09,000 EX    NavExpo             2,2   Navigated to https://trial.expoloader.com/signin	 

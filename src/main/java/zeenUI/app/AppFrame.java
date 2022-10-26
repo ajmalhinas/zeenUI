@@ -7,7 +7,6 @@ package zeenUI.app;
 import static zeenUI.app.ConsoleUtils.exec;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
-import com.sun.jna.platform.win32.WinUser;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -16,11 +15,9 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
@@ -61,11 +58,13 @@ public class AppFrame extends javax.swing.JFrame {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     int widthOfScreen = (int) screenSize.getWidth();
     int heightOfScreen = (int) screenSize.getHeight();
-    int currentScreenSize = heightOfScreen - 35;
+//    int currentScreenSize = heightOfScreen - 35;
 
     private int mouseX, mouseY;
     private static JDialog dialog;
     private JButton approveButton;
+
+    private static JFileChooser fileChooser;
 //    public static final int MAXIMIZED_HORIZ = 4;
 
     String winTitle = "MINGW64:/C/Zeen";
@@ -144,6 +143,8 @@ public class AppFrame extends javax.swing.JFrame {
         btnDeleteTestCase = new javax.swing.JButton();
         updateDriverPanel = new javax.swing.JPanel();
         btnUpdateDriver = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        txtTime = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         dirPath = new javax.swing.JLabel();
@@ -313,7 +314,7 @@ public class AppFrame extends javax.swing.JFrame {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1100, Short.MAX_VALUE)
+            .addGap(0, 1148, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,7 +346,7 @@ public class AppFrame extends javax.swing.JFrame {
         jPanel11.setLayout(new java.awt.BorderLayout());
 
         jPanel12.setBackground(new java.awt.Color(153, 153, 153));
-        jPanel12.setPreferredSize(new java.awt.Dimension(1000, 55));
+        jPanel12.setPreferredSize(new java.awt.Dimension(1150, 55));
         jPanel12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         openProjectPanel.setBackground(new java.awt.Color(153, 153, 153));
@@ -804,6 +805,24 @@ public class AppFrame extends javax.swing.JFrame {
 
         jPanel12.add(updateDriverPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 0, -1, -1));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setText("Wait After Time(sec)");
+        jPanel12.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, 140, 40));
+
+        txtTime.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtTime.setText("1");
+        txtTime.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtTimeMouseClicked(evt);
+            }
+        });
+        txtTime.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTimeKeyTyped(evt);
+            }
+        });
+        jPanel12.add(txtTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 10, 90, 40));
+
         jPanel11.add(jPanel12, java.awt.BorderLayout.LINE_START);
 
         jPanel7.add(jPanel11, java.awt.BorderLayout.CENTER);
@@ -822,12 +841,12 @@ public class AppFrame extends javax.swing.JFrame {
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1100, Short.MAX_VALUE)
+            .addGap(0, 1148, Short.MAX_VALUE)
             .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel13Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 93, Short.MAX_VALUE)
                     .addComponent(dirPath, javax.swing.GroupLayout.PREFERRED_SIZE, 962, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 93, Short.MAX_VALUE)))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1061,6 +1080,14 @@ public class AppFrame extends javax.swing.JFrame {
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
 
         // TODO add your handling code here:
+         int w;
+        String time = txtTime.getText();
+        if (time.isEmpty()) {
+            w = 1;
+        } else {
+            w = Integer.parseInt(time);
+        }
+
         String testFiles = dirPath.getText();
         String difFile = testFiles + "/output/diffs";
         File diffsFolder = new File(difFile);
@@ -1088,12 +1115,10 @@ public class AppFrame extends javax.swing.JFrame {
                         if (User32.INSTANCE.IsWindowEnabled(zeenWindow)) {
                             User32.INSTANCE.SetForegroundWindow(zeenWindow);
 
-                            r.keyPress(KeyEvent.VK_X);
-                            r.keyPress(KeyEvent.VK_ENTER);
-                            r.keyRelease(KeyEvent.VK_X);
-                            r.delay(2000);
+                           
+                            r.delay(1000);
                             String Upath = dirPath.getText().replace(":", "");
-                            String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w 5";
+                            String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w " + w;
 //                        System.out.println(zeenCommand);                     
                             keyboardString(zeenCommand);
                             r.keyPress(KeyEvent.VK_ENTER);
@@ -1112,9 +1137,9 @@ public class AppFrame extends javax.swing.JFrame {
                             keyboardString("cd /C/Zeen ");
                             r.keyPress(KeyEvent.VK_ENTER);
                             r.delay(1000);
-                            User32.INSTANCE.MoveWindow(User32.INSTANCE.FindWindow(null, winTitle), 0, y - 150, widthOfScreen, 150, true);
+                            User32.INSTANCE.MoveWindow(User32.INSTANCE.FindWindow(null, winTitle), 0, y - 254, widthOfScreen, 250, true);
                             String Upath = dirPath.getText().replace(":", "");
-                            String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w 5";
+                            String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w "+w;
 //                        System.out.println(zeenCommand);                     
                             keyboardString(zeenCommand);
                             r.keyPress(KeyEvent.VK_ENTER);
@@ -1128,7 +1153,7 @@ public class AppFrame extends javax.swing.JFrame {
                             btnPause.setVisible(true);
 
                         }
-                        
+
                         this.setAlwaysOnTop(true);
 
                     } catch (Exception ex) {
@@ -1182,11 +1207,11 @@ public class AppFrame extends javax.swing.JFrame {
     private void btnCreateProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateProjectActionPerformed
         // TODO add your handling code here:
 
-        try {
+         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-            JFileChooser file = new JFileChooser();
-            file.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
             dialog = new JDialog(this, " New Test Project", true);
             dialog.getAlignmentX();
@@ -1215,7 +1240,7 @@ public class AppFrame extends javax.swing.JFrame {
 
             JTextField location = new JTextField(35);
             panel2.add(lable2);
-            location.setText(file.getCurrentDirectory().getAbsolutePath());
+            location.setText(fileChooser.getCurrentDirectory().getAbsolutePath());
             panel2.add(location);
             JTextField Folder = new JTextField(35);
             Folder.setText(location.getText());
@@ -1224,9 +1249,9 @@ public class AppFrame extends javax.swing.JFrame {
             browse.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
-                    int res = file.showOpenDialog(null);
-                    if (res == file.APPROVE_OPTION) {
-                        String path = file.getSelectedFile().getAbsolutePath();
+                    int res = fileChooser.showOpenDialog(null);
+                    if (res == fileChooser.APPROVE_OPTION) {
+                        String path = fileChooser.getSelectedFile().getAbsolutePath();
                         location.setText(path + "\\");
                         Folder.setText(location.getText());
                     }
@@ -1345,9 +1370,9 @@ public class AppFrame extends javax.swing.JFrame {
     private void btnCreateTCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateTCActionPerformed
         // TODO add your handling code here:
 
-        try {
+       try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            JFileChooser testCaseFileChooser = new JFileChooser(dirPath.getText());
+            fileChooser = new JFileChooser(dirPath.getText());
 
             JLabel lable1 = new JLabel("Test Case Name:     ");
             lable1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
@@ -1379,7 +1404,7 @@ public class AppFrame extends javax.swing.JFrame {
             dialog.setLayout(new BorderLayout());
 
             // ProjectChooser projectChooser = new ProjectChooser();
-            testCaseFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
             folder.setText(dirPath.getText());
 
@@ -1492,21 +1517,22 @@ public class AppFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            JFileChooser projectChooser = new JFileChooser();
-            projectChooser.setCurrentDirectory(projectChooser.getSelectedFile());
+
+            fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(fileChooser.getSelectedFile());
             //OPen the JFileChooser window
-            projectChooser.setDialogTitle("Open Test Project");
+            fileChooser.setDialogTitle("Open Test Project");
 
             if (approveButton == null) {
-                approveButton = lookupButton(projectChooser, projectChooser.getUI().getApproveButtonText(projectChooser));
+                approveButton = lookupButton(fileChooser, fileChooser.getUI().getApproveButtonText(fileChooser));
                 approveButton.setEnabled(false);
 
             } else {
-                approveButton = lookupButton(projectChooser, projectChooser.getUI().getApproveButtonText(projectChooser));
+                approveButton = lookupButton(fileChooser, fileChooser.getUI().getApproveButtonText(fileChooser));
                 approveButton.setEnabled(false);
             }
-            projectChooser.setAcceptAllFileFilterUsed(false);
-            projectChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
                 @Override
                 public boolean accept(File f) {
                     return f.isDirectory() || f.isFile();
@@ -1518,9 +1544,9 @@ public class AppFrame extends javax.swing.JFrame {
                 }
             });
 
-            projectChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-            projectChooser.addPropertyChangeListener(new PropertyChangeListener() {
+            fileChooser.addPropertyChangeListener(new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
@@ -1548,11 +1574,11 @@ public class AppFrame extends javax.swing.JFrame {
                     }
                 }
             });
-            int res = projectChooser.showOpenDialog(null);
+            int res = fileChooser.showOpenDialog(null);
             if (res == JFileChooser.APPROVE_OPTION) {
 
-                title.setText(projectChooser.getSelectedFile().getAbsolutePath() + " - " + "ZUI");
-                dirPath.setText(projectChooser.getSelectedFile().getAbsolutePath());
+                title.setText(fileChooser.getSelectedFile().getAbsolutePath() + " - " + "ZUI");
+                dirPath.setText(fileChooser.getSelectedFile().getAbsolutePath());
                 dirPath.setVisible(false);
                 //output.setText(projectChooser.getSelectedFile().getAbsolutePath() + "\nrun: \n");
 
@@ -1566,7 +1592,6 @@ public class AppFrame extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
     }//GEN-LAST:event_btnOpenProjectActionPerformed
 
@@ -1621,24 +1646,25 @@ public class AppFrame extends javax.swing.JFrame {
 
     private void btnDeleteTestCaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteTestCaseActionPerformed
         // TODO add your handling code here:
-        try {
-            JFileChooser deleteTestCaseFileChooser = new JFileChooser();
+         try {
+
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            deleteTestCaseFileChooser.setCurrentDirectory(new File(dirPath.getText()));
-            deleteTestCaseFileChooser.setApproveButtonText("Delete");
+            fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(dirPath.getText()));
+            fileChooser.setApproveButtonText("Delete");
 
             if (approveButton == null) {
-                approveButton = lookupButton(deleteTestCaseFileChooser, deleteTestCaseFileChooser.getUI().getApproveButtonText(deleteTestCaseFileChooser));
+                approveButton = lookupButton(fileChooser, fileChooser.getUI().getApproveButtonText(fileChooser));
                 approveButton.setEnabled(false);
 
             } else {
-                approveButton = lookupButton(deleteTestCaseFileChooser, deleteTestCaseFileChooser.getUI().getApproveButtonText(deleteTestCaseFileChooser));
+                approveButton = lookupButton(fileChooser, fileChooser.getUI().getApproveButtonText(fileChooser));
                 approveButton.setEnabled(false);
             }
 
-            deleteTestCaseFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-            deleteTestCaseFileChooser.addPropertyChangeListener(new PropertyChangeListener() {
+            fileChooser.addPropertyChangeListener(new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
@@ -1666,10 +1692,10 @@ public class AppFrame extends javax.swing.JFrame {
                 }
             });
             //   deleteTestCaseFileChooser.showOpenDialog(null);
-            deleteTestCaseFileChooser.setDialogTitle("delete Test Case");
-            int response = deleteTestCaseFileChooser.showDialog(null, "Delete");
+            fileChooser.setDialogTitle("delete Test Case");
+            int response = fileChooser.showDialog(null, "Delete");
             if (response == JFileChooser.APPROVE_OPTION) {
-                File DeltFile = deleteTestCaseFileChooser.getSelectedFile();
+                File DeltFile = fileChooser.getSelectedFile();
 
                 if (DeltFile.exists()) {
                     if (DeltFile.isDirectory()) {
@@ -1731,21 +1757,20 @@ public class AppFrame extends javax.swing.JFrame {
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            JFileChooser chooseFile = new JFileChooser();
+            fileChooser = new JFileChooser();
             String pathOPenFile = dirPath.getText();
             File pathSelectFile = new File(pathOPenFile);
 
-            chooseFile.setCurrentDirectory(pathSelectFile);
+            fileChooser.setCurrentDirectory(pathSelectFile);
 
-            chooseFile.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            chooseFile.setDialogTitle("Open Testcase File");
-            // chooseFile.getCurrentDirectory();
-            //File openTestcase = new File(selectFile);
-            int res = chooseFile.showOpenDialog(null);
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            fileChooser.setDialogTitle("Open Testcase File");
+
+            int res = fileChooser.showOpenDialog(null);
             if (res == JFileChooser.APPROVE_OPTION) {
                 try {
 
-                    File selectFile = chooseFile.getSelectedFile();
+                    File selectFile = fileChooser.getSelectedFile();
                     Desktop.getDesktop().open(selectFile);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1754,7 +1779,6 @@ public class AppFrame extends javax.swing.JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }//GEN-LAST:event_btnOpenTestFileActionPerformed
 
     private void btnOpenTestFileMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOpenTestFileMouseExited
@@ -1806,6 +1830,21 @@ public class AppFrame extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnUpdateDriverActionPerformed
+
+    private void txtTimeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTimeMouseClicked
+        // TODO add your handling code here:
+        txtTime.setToolTipText("Set wait after time");
+    }//GEN-LAST:event_txtTimeMouseClicked
+
+    private void txtTimeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimeKeyTyped
+        // TODO add your handling code here:
+        char typedchar = evt.getKeyChar();
+        if (!(Character.isDigit(typedchar)|| (typedchar == KeyEvent.VK_BACK_SPACE) )|| 
+                (typedchar == KeyEvent.VK_DELETE) || (txtTime.getText().length() >= 2)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtTimeKeyTyped
 
     /**
      * @param args the command line arguments
@@ -1873,6 +1912,7 @@ public class AppFrame extends javax.swing.JFrame {
     private javax.swing.JPanel createTCPanel;
     private javax.swing.JPanel deleteTestCasePanel;
     private javax.swing.JLabel dirPath;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -1895,6 +1935,7 @@ public class AppFrame extends javax.swing.JFrame {
     private javax.swing.JPanel restoreSize;
     private javax.swing.JPanel stopPanel;
     private javax.swing.JLabel title;
+    private javax.swing.JTextField txtTime;
     private javax.swing.JPanel updateDriverPanel;
     // End of variables declaration//GEN-END:variables
 
