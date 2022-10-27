@@ -58,11 +58,12 @@ public class AppFrame extends javax.swing.JFrame {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     int widthOfScreen = (int) screenSize.getWidth();
     int heightOfScreen = (int) screenSize.getHeight();
-//    int currentScreenSize = heightOfScreen - 35;
+    int currentScreenSize = heightOfScreen - 35;
 
     private int mouseX, mouseY;
     private static JDialog dialog;
     private JButton approveButton;
+    private JLabel sizeOfFrame = new JLabel();
 
     private static JFileChooser fileChooser;
 //    public static final int MAXIMIZED_HORIZ = 4;
@@ -87,7 +88,7 @@ public class AppFrame extends javax.swing.JFrame {
         btnOpenTestFile.setEnabled(false);
         btnDeleteTestCase.setEnabled(false);
         btnPause.setVisible(false);
-        btnResize.setEnabled(false);
+        //btnResize.setEnabled(false);
 
         //output.setEditable(false);
     }
@@ -282,7 +283,7 @@ public class AppFrame extends javax.swing.JFrame {
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setForeground(new java.awt.Color(255, 255, 255));
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title.setText("ZUI");
+        title.setText("ZeenUI");
         title.setPreferredSize(new java.awt.Dimension(900, 34));
         title.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -806,8 +807,8 @@ public class AppFrame extends javax.swing.JFrame {
         jPanel12.add(updateDriverPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 0, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("Wait After Time(sec)");
-        jPanel12.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, 140, 40));
+        jLabel1.setText("Wait After Time(sec):");
+        jPanel12.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, 150, 40));
 
         txtTime.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtTime.setText("1");
@@ -821,7 +822,7 @@ public class AppFrame extends javax.swing.JFrame {
                 txtTimeKeyTyped(evt);
             }
         });
-        jPanel12.add(txtTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 10, 90, 40));
+        jPanel12.add(txtTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 10, 50, 40));
 
         jPanel11.add(jPanel12, java.awt.BorderLayout.LINE_START);
 
@@ -965,10 +966,7 @@ public class AppFrame extends javax.swing.JFrame {
                 r.keyRelease(KeyEvent.VK_CONTROL);
                 r.keyRelease(KeyEvent.VK_C);
                 r.delay(2000);
-//                WinDef.HWND hwnd = User32.INSTANCE.FindWindow(null, winTitle);
-//                User32.INSTANCE.PostMessage(hwnd, WinUser.WM_CLOSE, null, null);
 
-//                Runtime.getRuntime().exec("taskkill /f /im firefox.exe");
                 btnContinue.setEnabled(false);
                 btnRepAll.setEnabled(false);
                 btnStop.setEnabled(false);
@@ -990,8 +988,20 @@ public class AppFrame extends javax.swing.JFrame {
     private void btnResizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnResizeMouseClicked
         // TODO add your handling code here:
 
-        this.setExtendedState(NORMAL);
+        Dimension currentFrameSize = this.getSize();
+        String siz = currentFrameSize.toString();
 
+        String s = sizeOfFrame.getText();
+
+        if (siz.equals(s)) {
+
+            int heightOfFrame = (int) currentFrameSize.getHeight();
+
+            this.setBounds(150, currentScreenSize - heightOfFrame, 962, heightOfFrame);
+
+        } else {
+            setLocationToBottom(this);
+        }
 
     }//GEN-LAST:event_btnResizeMouseClicked
 
@@ -1080,96 +1090,100 @@ public class AppFrame extends javax.swing.JFrame {
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
 
         // TODO add your handling code here:
-         int w;
+        int w;
         String time = txtTime.getText();
         if (time.isEmpty()) {
-            w = 1;
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(this, "Can not run with empty wait after time", "Wait After Time", JOptionPane.ERROR_MESSAGE);
+
         } else {
             w = Integer.parseInt(time);
-        }
 
-        String testFiles = dirPath.getText();
-        String difFile = testFiles + "/output/diffs";
-        File diffsFolder = new File(difFile);
+            String testFiles = dirPath.getText();
+            String difFile = testFiles + "/output/diffs";
+            File diffsFolder = new File(difFile);
 
-        if (diffsFolder.exists()) {
-            String scrFile = testFiles + "/output/screenshots";
-            File scrFolder = new File(scrFile);
-            if (scrFolder.exists()) {
+            if (diffsFolder.exists()) {
+                String scrFile = testFiles + "/output/screenshots";
+                File scrFolder = new File(scrFile);
+                if (scrFolder.exists()) {
 
-                String tcFile = testFiles + "//testExe.csv";
-                File tcFolder = new File(tcFile);
-                if (tcFolder.exists()) {
-                    //User32.INSTANCE.FindWindow(null, winTitle);
-                    try {
-                        WinDef.HWND zeenWindow = User32.INSTANCE.FindWindow(null, winTitle);
-                        // User32.INSTANCE.PostMessage(zeenWindow, WinUser.WM_CLOSE, null, null);
+                    String tcFile = testFiles + "//testExe.csv";
+                    File tcFolder = new File(tcFile);
+                    if (tcFolder.exists()) {
+                        //User32.INSTANCE.FindWindow(null, winTitle);
+                        try {
+                            WinDef.HWND zeenWindow = User32.INSTANCE.FindWindow(null, winTitle);
+                            // User32.INSTANCE.PostMessage(zeenWindow, WinUser.WM_CLOSE, null, null);
 
-                        Robot r = new Robot();
+                            Robot r = new Robot();
 
-                        Dimension sizeOfJFrame = this.getSize();
-                        int x = 30 + (int) sizeOfJFrame.getHeight();
-                        int y = heightOfScreen - x;
+                            Dimension sizeOfJFrame = this.getSize();
+                            int x = 30 + (int) sizeOfJFrame.getHeight();
+                            int y = heightOfScreen - x;
 
-                        //new HandlingWindow("MINGW64:/C/Zeen");
-                        if (User32.INSTANCE.IsWindowEnabled(zeenWindow)) {
-                            User32.INSTANCE.SetForegroundWindow(zeenWindow);
+                            //new HandlingWindow("MINGW64:/C/Zeen");
+                            if (User32.INSTANCE.IsWindowEnabled(zeenWindow)) {
+                                User32.INSTANCE.SetForegroundWindow(zeenWindow);
 
-                           
-                            r.delay(1000);
-                            String Upath = dirPath.getText().replace(":", "");
-                            String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w " + w;
+                                r.delay(1000);
+                                String Upath = dirPath.getText().replace(":", "");
+                                String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w " + w;
 //                        System.out.println(zeenCommand);                     
-                            keyboardString(zeenCommand);
-                            r.keyPress(KeyEvent.VK_ENTER);
-                            btnContinue.setEnabled(true);
+                                keyboardString(zeenCommand);
+                                r.keyPress(KeyEvent.VK_ENTER);
+                                btnContinue.setEnabled(true);
 
-                            btnRepAll.setEnabled(true);
-                            btnStop.setEnabled(true);
-                            btnRepLast.setEnabled(true);
-                            btnReport.setEnabled(true);
-                            btnPlay.setVisible(false);
-                            btnPause.setVisible(true);
+                                btnRepAll.setEnabled(true);
+                                btnStop.setEnabled(true);
+                                btnRepLast.setEnabled(true);
+                                btnReport.setEnabled(true);
+                                btnPlay.setVisible(false);
+                                btnPause.setVisible(true);
 
-                        } else {
-                            exec("C:/Program Files/Git/git-bash.exe");
-                            r.delay(3000);
-                            keyboardString("cd /C/Zeen ");
-                            r.keyPress(KeyEvent.VK_ENTER);
-                            r.delay(1000);
-                            User32.INSTANCE.MoveWindow(User32.INSTANCE.FindWindow(null, winTitle), 0, y - 254, widthOfScreen, 250, true);
-                            String Upath = dirPath.getText().replace(":", "");
-                            String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w "+w;
+                            } else {
+                                exec("C:/Program Files/Git/git-bash.exe");
+                                r.delay(3000);
+                                keyboardString("cd /C/Zeen ");
+                                r.keyPress(KeyEvent.VK_ENTER);
+                                r.delay(1000);
+                                User32.INSTANCE.MoveWindow(User32.INSTANCE.FindWindow(null, winTitle), 0, y - 254, widthOfScreen, 250, true);
+                                String Upath = dirPath.getText().replace(":", "");
+                                String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w " + w;
 //                        System.out.println(zeenCommand);                     
-                            keyboardString(zeenCommand);
-                            r.keyPress(KeyEvent.VK_ENTER);
-                            btnContinue.setEnabled(true);
+                                keyboardString(zeenCommand);
+                                r.keyPress(KeyEvent.VK_ENTER);
+                                btnContinue.setEnabled(true);
 
-                            btnRepAll.setEnabled(true);
-                            btnStop.setEnabled(true);
-                            btnRepLast.setEnabled(true);
-                            btnReport.setEnabled(true);
-                            btnPlay.setVisible(false);
-                            btnPause.setVisible(true);
+                                btnRepAll.setEnabled(true);
+                                btnStop.setEnabled(true);
+                                btnRepLast.setEnabled(true);
+                                btnReport.setEnabled(true);
+                                btnPlay.setVisible(false);
+                                btnPause.setVisible(true);
 
+                            }
+
+                            this.setAlwaysOnTop(true);
+
+                        } catch (Exception ex) {
+                            btnPause.setVisible(false);
+                            ex.printStackTrace();
                         }
 
-                        this.setAlwaysOnTop(true);
-
-                    } catch (Exception ex) {
-                        btnPause.setVisible(false);
-                        ex.printStackTrace();
+                    } else {
+                        getToolkit().beep();
+                        JOptionPane.showMessageDialog(this, "File not found. Check the file and path: .. " + tcFolder.getAbsolutePath(), "File Missing", JOptionPane.ERROR_MESSAGE);
                     }
-
                 } else {
-                    JOptionPane.showMessageDialog(this, "File not found. Check the file and path: .. " + tcFolder.getAbsolutePath(), "File Missing", JOptionPane.ERROR_MESSAGE);
+                    getToolkit().beep();
+                    JOptionPane.showMessageDialog(this, "Unknown error has occured conduct the vendor:\nFile system element for parameter 'directory' does not exist: .. " + scrFolder.getAbsolutePath(), "File Missing", JOptionPane.ERROR_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Unknown error has occured conduct the vendor:\nFile system element for parameter 'directory' does not exist: .. " + scrFolder.getAbsolutePath(), "File Missing", JOptionPane.ERROR_MESSAGE);
-            }
 
-        } else {
-            JOptionPane.showMessageDialog(this, "Unknown error has occured conduct the vendor:\nFile system element for parameter 'directory' does not exist: .. " + diffsFolder.getAbsolutePath(), "File Missing", JOptionPane.ERROR_MESSAGE);
+            } else {
+                getToolkit().beep();
+                JOptionPane.showMessageDialog(this, "Unknown error has occured conduct the vendor:\nFile system element for parameter 'directory' does not exist: .. " + diffsFolder.getAbsolutePath(), "File Missing", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnPlayActionPerformed
 
@@ -1186,6 +1200,7 @@ public class AppFrame extends javax.swing.JFrame {
 ////////        System.out.println(widthOfScreen+"\n"+heightOfScreen+"\n"+currentScreenSize+"\n"+heightOfJFrame+"\n"+size);
 //////        User32.INSTANCE.MoveWindow(notepadWindow, 0, size, widthOfScreen, heightOfJFrame, true);
         setLocationToBottom(this);
+        sizeOfFrame.setText(this.getSize().toString());
 
 //        System.out.println(s);
 
@@ -1207,7 +1222,7 @@ public class AppFrame extends javax.swing.JFrame {
     private void btnCreateProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateProjectActionPerformed
         // TODO add your handling code here:
 
-         try {
+        try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
             fileChooser = new JFileChooser();
@@ -1271,11 +1286,14 @@ public class AppFrame extends javax.swing.JFrame {
                     Matcher m = pattern.matcher(name.getText());
 
                     if (name.getText().equals("")) {
+                        getToolkit().beep();
                         JOptionPane.showMessageDialog(null, "Project name cannot be empty");
                         name.requestFocus();
                     } else if (m.matches() == false) {
+                        getToolkit().beep();
                         JOptionPane.showMessageDialog(null, "Project name can not contain whitespace and invalid charactors");
                     } else if (newpath.exists()) {
+                        getToolkit().beep();
                         JOptionPane.showMessageDialog(null, "Project name is already exist in the directory.");
                         name.selectAll();
                         name.requestFocus();
@@ -1370,7 +1388,7 @@ public class AppFrame extends javax.swing.JFrame {
     private void btnCreateTCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateTCActionPerformed
         // TODO add your handling code here:
 
-       try {
+        try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             fileChooser = new JFileChooser(dirPath.getText());
 
@@ -1418,8 +1436,10 @@ public class AppFrame extends javax.swing.JFrame {
                     Matcher m = pattern.matcher(name.getText());
 
                     if (name.getText().trim().isEmpty()) {
+                        getToolkit().beep();
                         JOptionPane.showConfirmDialog(null, "Test Case name can't be empty", "Confirm", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE);
                     } else if (m.matches() == false) {
+                        getToolkit().beep();
                         JOptionPane.showMessageDialog(null, "Test Case name can not contain whitespace and invalid charactors");
                     } else {
                         File folder1 = new File(folder.getText() + "\\" + name.getText());
@@ -1454,6 +1474,7 @@ public class AppFrame extends javax.swing.JFrame {
                                 ex.printStackTrace();
                             }
                         } else {
+                            getToolkit().beep();
                             JOptionPane.showConfirmDialog(null, "Test Case name already exists", "Confirm", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                             name.selectAll();
                             name.requestFocus();
@@ -1646,7 +1667,7 @@ public class AppFrame extends javax.swing.JFrame {
 
     private void btnDeleteTestCaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteTestCaseActionPerformed
         // TODO add your handling code here:
-         try {
+        try {
 
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             fileChooser = new JFileChooser();
@@ -1705,10 +1726,11 @@ public class AppFrame extends javax.swing.JFrame {
                         }
 
                         DeltFile.delete();
+
                         JOptionPane.showMessageDialog(null, "The Test Case Deleted Successfully", "Confirm", JOptionPane.DEFAULT_OPTION);
                     } else {
-                        DeltFile.delete();
-                        JOptionPane.showMessageDialog(null, "The Test Case Deleted Successfully", "Confirm", JOptionPane.DEFAULT_OPTION);
+//                        DeltFile.delete();
+//                        JOptionPane.showMessageDialog(null, "The Test Case Deleted Successfully", "Confirm", JOptionPane.DEFAULT_OPTION);
                     }
                 }
             }
@@ -1839,8 +1861,8 @@ public class AppFrame extends javax.swing.JFrame {
     private void txtTimeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimeKeyTyped
         // TODO add your handling code here:
         char typedchar = evt.getKeyChar();
-        if (!(Character.isDigit(typedchar)|| (typedchar == KeyEvent.VK_BACK_SPACE) )|| 
-                (typedchar == KeyEvent.VK_DELETE) || (txtTime.getText().length() >= 2)) {
+        if (!(Character.isDigit(typedchar) || (typedchar == KeyEvent.VK_BACK_SPACE))
+                || (typedchar == KeyEvent.VK_DELETE) || (txtTime.getText().length() >= 2)) {
             getToolkit().beep();
             evt.consume();
         }
