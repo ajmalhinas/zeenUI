@@ -55,10 +55,10 @@ import org.codehaus.plexus.util.FileUtils;
  */
 public class AppFrame extends javax.swing.JFrame {
 
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    int widthOfScreen = (int) screenSize.getWidth();
-    int heightOfScreen = (int) screenSize.getHeight();
-    int currentScreenSize = heightOfScreen - 35;
+    private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private final int widthOfScreen = (int) screenSize.getWidth();
+    private final int heightOfScreen = (int) screenSize.getHeight();
+    private final int currentScreenSize = heightOfScreen - 35;
 
     private int mouseX, mouseY;
     private static JDialog dialog;
@@ -66,6 +66,7 @@ public class AppFrame extends javax.swing.JFrame {
     private JLabel sizeOfFrame = new JLabel();
 
     private static JFileChooser fileChooser;
+    
 //    public static final int MAXIMIZED_HORIZ = 4;
 
     String winTitle = "MINGW64:/C/Zeen";
@@ -88,9 +89,7 @@ public class AppFrame extends javax.swing.JFrame {
         btnOpenTestFile.setEnabled(false);
         btnDeleteTestCase.setEnabled(false);
         btnPause.setVisible(false);
-        //btnResize.setEnabled(false);
-
-        //output.setEditable(false);
+        
     }
 
     /**
@@ -178,6 +177,7 @@ public class AppFrame extends javax.swing.JFrame {
         btnClose.setBackground(new java.awt.Color(51, 51, 51));
         btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-close-24.png"))); // NOI18N
         btnClose.setBorder(null);
+        btnClose.setName("btnClose"); // NOI18N
         btnClose.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnCloseMouseEntered(evt);
@@ -213,6 +213,7 @@ public class AppFrame extends javax.swing.JFrame {
         btnResize.setBackground(new java.awt.Color(51, 51, 51));
         btnResize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-maximize-24.png"))); // NOI18N
         btnResize.setBorder(null);
+        btnResize.setName("btnResize"); // NOI18N
         btnResize.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnResizeMouseClicked(evt);
@@ -249,6 +250,7 @@ public class AppFrame extends javax.swing.JFrame {
         btnMinimize.setBackground(new java.awt.Color(51, 51, 51));
         btnMinimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-subtract-24.png"))); // NOI18N
         btnMinimize.setBorder(null);
+        btnMinimize.setName("btnMinimize"); // NOI18N
         btnMinimize.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnMinimizeMouseEntered(evt);
@@ -285,6 +287,7 @@ public class AppFrame extends javax.swing.JFrame {
         title.setForeground(new java.awt.Color(255, 255, 255));
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         title.setText("Zeen");
+        title.setName("title"); // NOI18N
         title.setPreferredSize(new java.awt.Dimension(900, 34));
         title.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -356,6 +359,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnOpenProject.setBackground(new java.awt.Color(153, 153, 153));
         btnOpenProject.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-opened-folder-50.png"))); // NOI18N
+        btnOpenProject.setName("btnOpenProject"); // NOI18N
         btnOpenProject.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnOpenProjectMouseEntered(evt);
@@ -392,6 +396,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnReport.setBackground(new java.awt.Color(153, 153, 153));
         btnReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-report-48.png"))); // NOI18N
+        btnReport.setName("btnReport"); // NOI18N
         btnReport.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnReportMouseEntered(evt);
@@ -464,6 +469,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnRepAll.setBackground(new java.awt.Color(153, 153, 153));
         btnRepAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-repeat-48.png"))); // NOI18N
+        btnRepAll.setName("btnRepAll"); // NOI18N
         btnRepAll.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnRepAllMouseEntered(evt);
@@ -500,6 +506,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnRepLast.setBackground(new java.awt.Color(153, 153, 153));
         btnRepLast.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-repeat-48_1.png"))); // NOI18N
+        btnRepLast.setName("btnRepLast"); // NOI18N
         btnRepLast.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnRepLastMouseEntered(evt);
@@ -536,6 +543,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnContinue.setBackground(new java.awt.Color(153, 153, 153));
         btnContinue.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-forward-button-48.png"))); // NOI18N
+        btnContinue.setName("btnContinue"); // NOI18N
         btnContinue.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnContinueMouseEntered(evt);
@@ -572,6 +580,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnStop.setBackground(new java.awt.Color(153, 153, 153));
         btnStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-stop-48.png"))); // NOI18N
+        btnStop.setName("btnStop"); // NOI18N
         btnStop.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnStopMouseEntered(evt);
@@ -608,6 +617,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnCreateTC.setBackground(new java.awt.Color(153, 153, 153));
         btnCreateTC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-add-file-48.png"))); // NOI18N
+        btnCreateTC.setName("btnCreateTC"); // NOI18N
         btnCreateTC.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnCreateTCMouseEntered(evt);
@@ -649,6 +659,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnCreateProject.setBackground(new java.awt.Color(153, 153, 153));
         btnCreateProject.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-add-folder-48.png"))); // NOI18N
+        btnCreateProject.setName("btnCreateProject"); // NOI18N
         btnCreateProject.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnCreateProjectMouseEntered(evt);
@@ -685,6 +696,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnPlay.setBackground(new java.awt.Color(153, 153, 153));
         btnPlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-play-30.png"))); // NOI18N
+        btnPlay.setName("btnPlay"); // NOI18N
         btnPlay.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnPlayMouseEntered(evt);
@@ -701,6 +713,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnPause.setBackground(new java.awt.Color(153, 153, 153));
         btnPause.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-pause-48_1.png"))); // NOI18N
+        btnPause.setName("btnPause"); // NOI18N
         btnPause.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnPauseMouseEntered(evt);
@@ -740,6 +753,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnDeleteTestCase.setBackground(new java.awt.Color(153, 153, 153));
         btnDeleteTestCase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-remove-48.png"))); // NOI18N
+        btnDeleteTestCase.setName("btnDeleteTestCase"); // NOI18N
         btnDeleteTestCase.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnDeleteTestCaseMouseEntered(evt);
@@ -776,6 +790,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         btnUpdateDriver.setBackground(new java.awt.Color(153, 153, 153));
         btnUpdateDriver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-installing-updates-48.png"))); // NOI18N
+        btnUpdateDriver.setName("btnUpdateDriver"); // NOI18N
         btnUpdateDriver.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnUpdateDriverMouseEntered(evt);
@@ -813,6 +828,7 @@ public class AppFrame extends javax.swing.JFrame {
 
         txtTime.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtTime.setText("1");
+        txtTime.setName("txtTime"); // NOI18N
         txtTime.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtTimeMouseClicked(evt);
@@ -928,6 +944,9 @@ public class AppFrame extends javax.swing.JFrame {
             r.keyPress(KeyEvent.VK_A);
             r.keyRelease(KeyEvent.VK_A);
             r.keyPress(KeyEvent.VK_ENTER);
+            
+             btnPlay.setVisible(false);
+            btnPause.setVisible(true);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -946,6 +965,10 @@ public class AppFrame extends javax.swing.JFrame {
             r.keyPress(KeyEvent.VK_C);
             r.keyRelease(KeyEvent.VK_C);
             r.keyPress(KeyEvent.VK_ENTER);
+            
+             btnPlay.setVisible(false);
+            btnPause.setVisible(true);
+            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -972,6 +995,7 @@ public class AppFrame extends javax.swing.JFrame {
                 btnRepAll.setEnabled(false);
                 btnStop.setEnabled(false);
                 btnRepLast.setEnabled(false);
+                btnPlay.setEnabled(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1112,10 +1136,10 @@ public class AppFrame extends javax.swing.JFrame {
                     String tcFile = testFiles + "//testExe.csv";
                     File tcFolder = new File(tcFile);
                     if (tcFolder.exists()) {
-                        //User32.INSTANCE.FindWindow(null, winTitle);
+                     
                         try {
                             WinDef.HWND zeenWindow = User32.INSTANCE.FindWindow(null, winTitle);
-                            // User32.INSTANCE.PostMessage(zeenWindow, WinUser.WM_CLOSE, null, null);
+                            
 
                             Robot r = new Robot();
 
@@ -1129,8 +1153,7 @@ public class AppFrame extends javax.swing.JFrame {
 
                                 r.delay(1000);
                                 String Upath = dirPath.getText().replace(":", "");
-                                String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w " + w;
-//                        System.out.println(zeenCommand);                     
+                                String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w " + w;                     
                                 keyboardString(zeenCommand);
                                 r.keyPress(KeyEvent.VK_ENTER);
                                 btnContinue.setEnabled(true);
@@ -1150,8 +1173,7 @@ public class AppFrame extends javax.swing.JFrame {
                                 r.delay(1000);
                                 User32.INSTANCE.MoveWindow(User32.INSTANCE.FindWindow(null, winTitle), 0, y - 254, widthOfScreen, 250, true);
                                 String Upath = dirPath.getText().replace(":", "");
-                                String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w " + w;
-//                        System.out.println(zeenCommand);                     
+                                String zeenCommand = "./zeen.sh --directory /" + FilenameUtils.separatorsToUnix(Upath) + " -w " + w;                   
                                 keyboardString(zeenCommand);
                                 r.keyPress(KeyEvent.VK_ENTER);
                                 btnContinue.setEnabled(true);
@@ -1191,19 +1213,9 @@ public class AppFrame extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
 //        // TODO add your handling code here:
 
-//        WinDef.HWND zeenWindow = User32.INSTANCE.FindWindow(null, "a - Notepad");
-//////         WinDef.HWND notepadWindow = User32.INSTANCE.FindWindow(null, "theAwtToolkitWindow");
-//////        User32.INSTANCE.SetForegroundWindow(notepadWindow);
-//////Dimension sizeOfJFrame=this.getSize();
-//////        
-//////         int heightOfJFrame = (int) sizeOfJFrame.getHeight();
-//////        int size= currentScreenSize-heightOfJFrame;
-////////        System.out.println(widthOfScreen+"\n"+heightOfScreen+"\n"+currentScreenSize+"\n"+heightOfJFrame+"\n"+size);
-//////        User32.INSTANCE.MoveWindow(notepadWindow, 0, size, widthOfScreen, heightOfJFrame, true);
         setLocationToBottom(this);
         sizeOfFrame.setText(this.getSize().toString());
 
-//        System.out.println(s);
 
     }//GEN-LAST:event_formWindowOpened
 
@@ -1227,6 +1239,8 @@ public class AppFrame extends javax.swing.JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
             fileChooser = new JFileChooser();
+           fileChooser.setName("fileChooser");
+            
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
             dialog = new JDialog(this, " New Test Project", true);
@@ -1251,6 +1265,7 @@ public class AppFrame extends javax.swing.JFrame {
             lblProjectFolder.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 
             JTextField txtProjectName = new JTextField(35);
+            txtProjectName.setName("txtProjectName");
             panel1.add(lblProjectName);
             panel1.add(txtProjectName);
 
@@ -1262,20 +1277,24 @@ public class AppFrame extends javax.swing.JFrame {
             txtProjectFolder.setText(txtProjectLocation.getText());
 
             JButton btnBrowse = new JButton("Browse");
+            btnBrowse.setName("btnBrowse");
             btnBrowse.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    fileChooser.setApproveButtonText("Save");
 
                     int res = fileChooser.showOpenDialog(null);
                     if (res == fileChooser.APPROVE_OPTION) {
                         String path = fileChooser.getSelectedFile().getAbsolutePath();
                         txtProjectLocation.setText(path + "\\");
                         txtProjectFolder.setText(txtProjectLocation.getText());
+                        
                     }
                 }
             });
             panel2.add(btnBrowse);
 
             JButton btnCreate = new JButton("Create");
+            btnCreate.setName("btnCreate");
             btnCreate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -1305,18 +1324,18 @@ public class AppFrame extends javax.swing.JFrame {
                         try {
 
                             FileUtils.copyDirectoryStructure(source, destinationFolder);
+                            //UIManager.put("OptionPane.okButtonText", "OK");
                             JOptionPane.showMessageDialog(null, "Project created successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            
 
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                         dialog.dispose();
                         title.setText(txtProjectFolder.getText() + " - " + "Zeen");
-//                        output.setText(Folder.getText() + "\n" + "run");
-//                        output.setEditable(false);
+
                         dirPath.setText(txtProjectFolder.getText());
                         dirPath.setVisible(false);
-                        // btnOpenTestFile.setEnabled(true);
                         btnCreateTC.setEnabled(true);
 
                     }
@@ -1348,6 +1367,7 @@ public class AppFrame extends javax.swing.JFrame {
             });
 
             JButton btnCancel = new JButton("Cancel");
+            btnCancel.setName("btnCancel");
             btnCancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     dialog.dispose();
@@ -1365,7 +1385,7 @@ public class AppFrame extends javax.swing.JFrame {
             dialog.add(panelbtn, BorderLayout.SOUTH);
 
             txtProjectFolder.setEditable(false);
-            dialog.setSize(500, 200);
+            dialog.setSize(widthOfScreen/3+72, heightOfScreen/4+20);
             dialog.setVisible(true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1396,12 +1416,12 @@ public class AppFrame extends javax.swing.JFrame {
             JLabel lblTestSuiteName = new JLabel("Test Suite Name:     ");
             lblTestSuiteName.setFont(new Font("Times New Roman", Font.PLAIN, 14));
             JTextField txtTestSuiteName = new JTextField(28);
+            txtTestSuiteName.setName("txtTestSuiteName");
             JLabel lblTestSuiteLocation = new JLabel("Test Suite Location: ");
             lblTestSuiteLocation.setFont(new Font("Times New Roman", Font.PLAIN, 14));
             JTextField txtTestSuiteFolder = new JTextField(28);
             txtTestSuiteFolder.setEditable(false);
 
-            //JPanel createTitlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEADING));
             JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             JPanel panel3 = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -1411,7 +1431,6 @@ public class AppFrame extends javax.swing.JFrame {
             panel3.add(lblTestSuiteLocation);
             panel3.add(txtTestSuiteFolder);
 
-            //JFrame frame = new JFrame();
             dialog = new JDialog(this, "New Test Suite", true);
             dialog.getAlignmentX();
             ImageIcon icon = new ImageIcon("src/main/resources/image/letter-z.png");
@@ -1421,17 +1440,17 @@ public class AppFrame extends javax.swing.JFrame {
             dialog.setBounds(400, 200, 400, 400);
 
             dialog.setLayout(new BorderLayout());
-
-            // ProjectChooser projectChooser = new ProjectChooser();
+           
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
             txtTestSuiteFolder.setText(dirPath.getText());
 
             JButton btnCreateTestSuite = new JButton("Create");
+            btnCreateTestSuite.setName("btnCreateTestSuite");
             btnCreateTestSuite.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //  try{
+                  
 
                     Pattern pattern = Pattern.compile("(?i)(^[a-z])\\w{1,29}$");
                     Matcher m = pattern.matcher(txtTestSuiteName.getText());
@@ -1461,12 +1480,9 @@ public class AppFrame extends javax.swing.JFrame {
                                 btnPlay.setEnabled(true);
                                 btnOpenTestFile.setEnabled(true);
                                 btnDeleteTestCase.setEnabled(true);
-
-                                //title.setText(folder.getText() + " - ZeenUI");
+ 
                                 dirPath.setText(txtTestSuiteFolder.getText());
                                 dirPath.setVisible(false);
-//                                output.setText(folder.getText() + "\n" + "run");
-//                                output.setEditable(false);
 
                                 Desktop.getDesktop().open(destination);
                                 Desktop.getDesktop().open(destination1);
@@ -1487,6 +1503,7 @@ public class AppFrame extends javax.swing.JFrame {
             panel2.add(btnCreateTestSuite);
 
             JButton btnCancelTestSuite = new JButton("Cancel");
+            btnCancelTestSuite.setName("btnCancelTestSuite");
             btnCancelTestSuite.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -1495,17 +1512,15 @@ public class AppFrame extends javax.swing.JFrame {
             });
             panel2.add(btnCancelTestSuite);
 
-            // createTitlePanel.add(createTitle);
             JPanel compoPanel = new JPanel(new GridLayout(2, 0));
 
-            //compoPanel.add(createTitlePanel);
             compoPanel.add(panel1);
             compoPanel.add(panel3);
 
             dialog.add(compoPanel, BorderLayout.NORTH);
             dialog.add(panel2, BorderLayout.SOUTH);
 
-            dialog.setSize(400, 160);
+            dialog.setSize(widthOfScreen/3-46, heightOfScreen/5+10);
             dialog.setVisible(true);
 
         } catch (Exception ex) {
@@ -1529,10 +1544,14 @@ public class AppFrame extends javax.swing.JFrame {
             r.keyPress(KeyEvent.VK_R);
             r.keyRelease(KeyEvent.VK_R);
             r.keyPress(KeyEvent.VK_ENTER);
+            
+            btnPlay.setVisible(false);
+            btnPause.setVisible(true);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
     }//GEN-LAST:event_btnRepLastActionPerformed
 
     private void btnOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenProjectActionPerformed
@@ -1544,6 +1563,8 @@ public class AppFrame extends javax.swing.JFrame {
             fileChooser.setCurrentDirectory(fileChooser.getSelectedFile());
             //OPen the JFileChooser window
             fileChooser.setDialogTitle("Open Test Project");
+            //System.out.println( fileChooser.getUI().getFileView(fileChooser).getName(new File("ThisPC")));
+            // fileChooser.getUI().getFileView(fileChooser).getName(new File("This PC"));
 
             if (approveButton == null) {
                 approveButton = lookupButton(fileChooser, fileChooser.getUI().getApproveButtonText(fileChooser));
@@ -1596,6 +1617,7 @@ public class AppFrame extends javax.swing.JFrame {
                     }
                 }
             });
+            fileChooser.setApproveButtonText("Open");
             int res = fileChooser.showOpenDialog(null);
             if (res == JFileChooser.APPROVE_OPTION) {
 
@@ -1767,6 +1789,8 @@ public class AppFrame extends javax.swing.JFrame {
             r.keyPress(KeyEvent.VK_ENTER);
             btnPause.setVisible(false);
             btnPlay.setVisible(true);
+            btnPlay.setEnabled(false);
+            btnContinue.setEnabled(false);
         } catch (Exception e) {
 
             e.printStackTrace();
