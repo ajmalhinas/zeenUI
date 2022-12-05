@@ -65,10 +65,9 @@ public class AppFrame extends javax.swing.JFrame {
     private JButton approveButton;
     private JLabel sizeOfFrame = new JLabel();
 
-    private static JFileChooser fileChooser = new JFileChooser();
+    private static JFileChooser fileChooser;
 
     String winTitle = "MINGW64:/C/Zeen";
-  
 
     //private PrintStream standardOut;
     /**
@@ -78,6 +77,8 @@ public class AppFrame extends javax.swing.JFrame {
     public AppFrame() {
         initComponents();
 
+        fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setName("fileChooser");
 
         btnPlay.setEnabled(false);
@@ -1233,13 +1234,7 @@ public class AppFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCreateProjectMouseExited
 
     private void btnCreateProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateProjectActionPerformed
-        // TODO add your handling code here:
-
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-            fileChooser = new JFileChooser();
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
             dialog = new JDialog(this, " New Test Project", true);
             dialog.getAlignmentX();
@@ -1284,7 +1279,7 @@ public class AppFrame extends javax.swing.JFrame {
                     int res = fileChooser.showOpenDialog(null);
                     if (res == fileChooser.APPROVE_OPTION) {
                         String path = fileChooser.getSelectedFile().getAbsolutePath();
-                        txtProjectLocation.setText(path + "\\");
+                        txtProjectLocation.setText(path + File.separator);  //write code in a platform independent way as much as possible
                         txtProjectFolder.setText(txtProjectLocation.getText() + txtProjectName.getText());
 
                     }
@@ -1297,49 +1292,44 @@ public class AppFrame extends javax.swing.JFrame {
             btnCreate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String folder = txtProjectLocation.getText();
-                    File source = new File("c:/Zeen/template/projectFileTemplate");
-                    File newpath = new File(folder + "/" + txtProjectName.getText());
+                    try {
+                        String folder = txtProjectLocation.getText();
+                        File source = new File("template/projectFileTemplate");  //dont use absolute paths
+                        File newpath = new File(folder + File.separator + txtProjectName.getText());
 
-                    Pattern pattern = Pattern.compile("^[A-Za-z]{1,29}$");
-                    Matcher m = pattern.matcher(txtProjectName.getText());
+                        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_]+$");
+                        Matcher m = pattern.matcher(txtProjectName.getText());
 
-                    if (txtProjectName.getText().equals("")) {
-                        getToolkit().beep();
-                        JOptionPane.showMessageDialog(null, "Project name cannot be empty");
-                        txtProjectName.requestFocus();
-                    } else if (!(m.matches())) {
-                        getToolkit().beep();
-                        JOptionPane.showMessageDialog(null, "Project name can not contain whitespace and invalid charactors");
-                        txtProjectName.selectAll();
-                        txtProjectName.requestFocus();
-                    } else if (newpath.exists()) {
-                        getToolkit().beep();
-                        JOptionPane.showMessageDialog(null, "Project name is already exist in the directory.");
-                        txtProjectName.selectAll();
-                        txtProjectName.requestFocus();
+                        if (!(m.matches())) {
+                            getToolkit().beep();
+                            JOptionPane.showMessageDialog(null, "Project name can not contain whitespace or invalid charactors");
+                            txtProjectName.selectAll();
+                            txtProjectName.requestFocus();
+                        } else if (newpath.exists()) {
+                            getToolkit().beep();
+                            JOptionPane.showMessageDialog(null, "Project name is already exist in the directory.");
+                            txtProjectName.selectAll();
+                            txtProjectName.requestFocus();
 
-                    } else {
+                        } else {
 
-                        File destinationFolder = new File(folder + "/", txtProjectName.getText());
-                        try {
+                            File destinationFolder = new File(folder + File.separator, txtProjectName.getText());
 
                             FileUtils.copyDirectoryStructure(source, destinationFolder);
-                            
                             JOptionPane.showMessageDialog(null, "Project created successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                            dialog.dispose();
+                            title.setText(txtProjectFolder.getText() + " - " + "Zeen");
+
+                            dirPath.setText(txtProjectFolder.getText());
+                            dirPath.setVisible(false);
+                            btnCreateTC.setEnabled(true);
+
                         }
-                        dialog.dispose();
-                        title.setText(txtProjectFolder.getText() + " - " + "Zeen");
-
-                        dirPath.setText(txtProjectFolder.getText());
-                        dirPath.setVisible(false);
-                        btnCreateTC.setEnabled(true);
-
+                    } catch (IOException ex) {
+                        //Todo properly handle exceptions
+                        Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
                 }
             });
             panelbtn.add(btnCreate);
@@ -1354,14 +1344,14 @@ public class AppFrame extends javax.swing.JFrame {
 
                 @Override
                 public void keyPressed(KeyEvent e) {
-                    txtProjectFolder.setText(txtProjectLocation.getText() + "\\" + txtProjectName.getText());
+                    txtProjectFolder.setText(txtProjectLocation.getText() + File.separator + txtProjectName.getText());
 
                 }
 
                 @Override
                 public void keyReleased(KeyEvent e) {
 
-                    txtProjectFolder.setText(txtProjectLocation.getText() + "\\" + txtProjectName.getText());
+                    txtProjectFolder.setText(txtProjectLocation.getText() + File.separator + txtProjectName.getText());
 
                 }
             });
@@ -1389,6 +1379,7 @@ public class AppFrame extends javax.swing.JFrame {
             dialog.setVisible(true);
         } catch (Exception ex) {
             ex.printStackTrace();
+            //Todo handle exception properly 
         }
 
     }//GEN-LAST:event_btnCreateProjectActionPerformed
@@ -1461,7 +1452,7 @@ public class AppFrame extends javax.swing.JFrame {
                         getToolkit().beep();
                         JOptionPane.showMessageDialog(null, "Test Suite name can not contain whitespace and invalid charactors");
                     } else {
-                        File folder1 = new File(txtTestSuiteFolder.getText() + "\\" + txtTestSuiteName.getText());
+                        File folder1 = new File(txtTestSuiteFolder.getText() + File.separator + txtTestSuiteName.getText());
                         if (!folder1.exists()) {
                             folder1.mkdir();
 
