@@ -7,6 +7,7 @@ package zeenUI.app;
 import static zeenUI.app.ConsoleUtils.exec;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -46,6 +47,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.io.FilenameUtils;
 import org.codehaus.plexus.util.FileUtils;
 
@@ -77,10 +79,31 @@ public class AppFrame extends javax.swing.JFrame {
     public AppFrame() {
         initComponents();
 
-        fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.setName("fileChooser");
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setName("fileChooser");
 
+            dialog = new JDialog();
+            dialog.getAlignmentX();
+            ImageIcon icon = new ImageIcon("src/main/resources/image/letter-z.png");
+            dialog.setIconImage(icon.getImage());
+            dialog.pack();
+            dialog.setName("dialog");
+            dialog.setLayout(new BorderLayout());
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        dialog.setBounds(400, 200, 400, 400);
         btnPlay.setEnabled(false);
         btnContinue.setEnabled(false);
         btnRepAll.setEnabled(false);
@@ -1234,153 +1257,141 @@ public class AppFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCreateProjectMouseExited
 
     private void btnCreateProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateProjectActionPerformed
-        try {
 
-            dialog = new JDialog(this, " New Test Project", true);
-            dialog.getAlignmentX();
-            ImageIcon icon = new ImageIcon("src/main/resources/image/letter-z.png");
-            dialog.setIconImage(icon.getImage());
-            dialog.pack();
-            dialog.setName("dialog");
+        dialog.setTitle("New Test Project");
 
-            dialog.setBounds(400, 200, 400, 400);
-            dialog.setLayout(new BorderLayout());
+        JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        JPanel panel3 = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        JPanel panelbtn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-            JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEADING));
-            JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEADING));
-            JPanel panel3 = new JPanel(new FlowLayout(FlowLayout.LEADING));
-            JPanel panelbtn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JLabel lblProjectName = new JLabel("Project Name:       ");
+        lblProjectName.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        JLabel lblProjectLocation = new JLabel("Project Location:   ");
+        lblProjectLocation.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        JLabel lblProjectFolder = new JLabel("Project Folder:      ");
+        lblProjectFolder.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 
-            JLabel lblProjectName = new JLabel("Project Name:       ");
-            lblProjectName.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-            JLabel lblProjectLocation = new JLabel("Project Location:   ");
-            lblProjectLocation.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-            JLabel lblProjectFolder = new JLabel("Project Folder:      ");
-            lblProjectFolder.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        JTextField txtProjectName = new JTextField(35);
+        txtProjectName.setName("txtProjectName");
+        panel1.add(lblProjectName);
+        panel1.add(txtProjectName);
 
-            JTextField txtProjectName = new JTextField(35);
-            txtProjectName.setName("txtProjectName");
-            panel1.add(lblProjectName);
-            panel1.add(txtProjectName);
+        JTextField txtProjectLocation = new JTextField(35);
+        panel2.add(lblProjectLocation);
+        txtProjectLocation.setText(fileChooser.getCurrentDirectory().getAbsolutePath());
+        panel2.add(txtProjectLocation);
+        JTextField txtProjectFolder = new JTextField(35);
+        txtProjectFolder.setText(txtProjectLocation.getText());
 
-            JTextField txtProjectLocation = new JTextField(35);
-            panel2.add(lblProjectLocation);
-            txtProjectLocation.setText(fileChooser.getCurrentDirectory().getAbsolutePath());
-            panel2.add(txtProjectLocation);
-            JTextField txtProjectFolder = new JTextField(35);
-            txtProjectFolder.setText(txtProjectLocation.getText());
+        JButton btnBrowse = new JButton("Browse");
+        btnBrowse.setName("btnBrowse");
+        btnBrowse.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fileChooser.setApproveButtonText("Save");
 
-            JButton btnBrowse = new JButton("Browse");
-            btnBrowse.setName("btnBrowse");
-            btnBrowse.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    fileChooser.setApproveButtonText("Save");
+                int res = fileChooser.showOpenDialog(null);
+                if (res == fileChooser.APPROVE_OPTION) {
+                    String path = fileChooser.getSelectedFile().getAbsolutePath();
+                    txtProjectLocation.setText(path);  //write code in a platform independent way as much as possible
+                    txtProjectFolder.setText(txtProjectLocation.getText() + txtProjectName.getText());
 
-                    int res = fileChooser.showOpenDialog(null);
-                    if (res == fileChooser.APPROVE_OPTION) {
-                        String path = fileChooser.getSelectedFile().getAbsolutePath();
-                        txtProjectLocation.setText(path + File.separator);  //write code in a platform independent way as much as possible
-                        txtProjectFolder.setText(txtProjectLocation.getText() + txtProjectName.getText());
+                }
+            }
+        });
+        panel2.add(btnBrowse);
+
+        JButton btnCreate = new JButton("Create");
+        btnCreate.setName("btnCreate");
+        btnCreate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String folder = txtProjectLocation.getText();
+                    File source = new File("template/projectFileTemplate");  //dont use absolute paths
+                    File newpath = new File(folder + File.separator + txtProjectName.getText());
+
+                    Pattern pattern = Pattern.compile("^[a-zA-Z0-9_]+$");
+                    Matcher m = pattern.matcher(txtProjectName.getText());
+
+                    if (!(m.matches())) {
+                        getToolkit().beep();
+                        JOptionPane.showMessageDialog(null, "Project name can not contain whitespace or invalid charactors");
+                        txtProjectName.selectAll();
+                        txtProjectName.requestFocus();
+                    } else if (newpath.exists()) {
+                        getToolkit().beep();
+                        JOptionPane.showMessageDialog(null, "Project name is already exist in the directory.");
+                        txtProjectName.selectAll();
+                        txtProjectName.requestFocus();
+
+                    } else {
+
+                        File destinationFolder = new File(folder + File.separator, txtProjectName.getText());
+
+                        FileUtils.copyDirectoryStructure(source, destinationFolder);
+                        JOptionPane.showMessageDialog(null, "Project created successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                        dialog.dispose();
+                        title.setText(txtProjectFolder.getText() + " - " + "Zeen");
+
+                        dirPath.setText(txtProjectFolder.getText());
+                        dirPath.setVisible(false);
+                        btnCreateTC.setEnabled(true);
 
                     }
+                } catch (IOException ex) {
+                    //Todo properly handle exceptions
+                    Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            });
-            panel2.add(btnBrowse);
+            }
+        });
+        panelbtn.add(btnCreate);
+        panel3.add(lblProjectFolder);
+        panel3.add(txtProjectFolder);
 
-            JButton btnCreate = new JButton("Create");
-            btnCreate.setName("btnCreate");
-            btnCreate.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        String folder = txtProjectLocation.getText();
-                        File source = new File("template/projectFileTemplate");  //dont use absolute paths
-                        File newpath = new File(folder + File.separator + txtProjectName.getText());
+        txtProjectName.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
 
-                        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_]+$");
-                        Matcher m = pattern.matcher(txtProjectName.getText());
+            }
 
-                        if (!(m.matches())) {
-                            getToolkit().beep();
-                            JOptionPane.showMessageDialog(null, "Project name can not contain whitespace or invalid charactors");
-                            txtProjectName.selectAll();
-                            txtProjectName.requestFocus();
-                        } else if (newpath.exists()) {
-                            getToolkit().beep();
-                            JOptionPane.showMessageDialog(null, "Project name is already exist in the directory.");
-                            txtProjectName.selectAll();
-                            txtProjectName.requestFocus();
+            @Override
+            public void keyPressed(KeyEvent e) {
+                txtProjectFolder.setText(txtProjectLocation.getText() + File.separator + txtProjectName.getText());
 
-                        } else {
+            }
 
-                            File destinationFolder = new File(folder + File.separator, txtProjectName.getText());
+            @Override
+            public void keyReleased(KeyEvent e) {
 
-                            FileUtils.copyDirectoryStructure(source, destinationFolder);
-                            JOptionPane.showMessageDialog(null, "Project created successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                txtProjectFolder.setText(txtProjectLocation.getText() + File.separator + txtProjectName.getText());
 
-                            dialog.dispose();
-                            title.setText(txtProjectFolder.getText() + " - " + "Zeen");
+            }
+        });
 
-                            dirPath.setText(txtProjectFolder.getText());
-                            dirPath.setVisible(false);
-                            btnCreateTC.setEnabled(true);
+        JButton btnCancel = new JButton("Cancel");
+        btnCancel.setName("btnCancel");
+        btnCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
+        panelbtn.add(btnCancel);
 
-                        }
-                    } catch (IOException ex) {
-                        //Todo properly handle exceptions
-                        Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            });
-            panelbtn.add(btnCreate);
-            panel3.add(lblProjectFolder);
-            panel3.add(txtProjectFolder);
+        JPanel compoPanel = new JPanel(new GridLayout(4, 0));
 
-            txtProjectName.addKeyListener(new KeyListener() {
-                @Override
-                public void keyTyped(KeyEvent e) {
+        compoPanel.add(panel1);
+        compoPanel.add(panel2);
+        compoPanel.add(panel3);
 
-                }
+        dialog.add(compoPanel, BorderLayout.NORTH);
+        dialog.add(panelbtn, BorderLayout.SOUTH);
 
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    txtProjectFolder.setText(txtProjectLocation.getText() + File.separator + txtProjectName.getText());
+        txtProjectFolder.setEditable(false);
+        dialog.setSize(widthOfScreen / 3 + 72, heightOfScreen / 4 + 20);
+        dialog.setVisible(true);
 
-                }
-
-                @Override
-                public void keyReleased(KeyEvent e) {
-
-                    txtProjectFolder.setText(txtProjectLocation.getText() + File.separator + txtProjectName.getText());
-
-                }
-            });
-
-            JButton btnCancel = new JButton("Cancel");
-            btnCancel.setName("btnCancel");
-            btnCancel.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    dialog.dispose();
-                }
-            });
-            panelbtn.add(btnCancel);
-
-            JPanel compoPanel = new JPanel(new GridLayout(4, 0));
-
-            compoPanel.add(panel1);
-            compoPanel.add(panel2);
-            compoPanel.add(panel3);
-
-            dialog.add(compoPanel, BorderLayout.NORTH);
-            dialog.add(panelbtn, BorderLayout.SOUTH);
-
-            txtProjectFolder.setEditable(false);
-            dialog.setSize(widthOfScreen / 3 + 72, heightOfScreen / 4 + 20);
-            dialog.setVisible(true);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            //Todo handle exception properly 
-        }
 
     }//GEN-LAST:event_btnCreateProjectActionPerformed
 
@@ -1400,122 +1411,106 @@ public class AppFrame extends javax.swing.JFrame {
     private void btnCreateTCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateTCActionPerformed
         // TODO add your handling code here:
 
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File(dirPath.getText()));
-            JLabel lblTestSuiteName = new JLabel("Test Suite Name:     ");
-            lblTestSuiteName.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-            JTextField txtTestSuiteName = new JTextField(28);
-            txtTestSuiteName.setName("txtTestSuiteName");
-            JLabel lblTestSuiteLocation = new JLabel("Test Suite Location: ");
-            lblTestSuiteLocation.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-            JTextField txtTestSuiteFolder = new JTextField(28);
-            txtTestSuiteFolder.setEditable(false);
+        fileChooser.setCurrentDirectory(new File(dirPath.getText()));
+        JLabel lblTestSuiteName = new JLabel("Test Suite Name:     ");
+        lblTestSuiteName.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        JTextField txtTestSuiteName = new JTextField(28);
+        txtTestSuiteName.setName("txtTestSuiteName");
+        JLabel lblTestSuiteLocation = new JLabel("Test Suite Location: ");
+        lblTestSuiteLocation.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        JTextField txtTestSuiteFolder = new JTextField(28);
+        txtTestSuiteFolder.setEditable(false);
 
-            JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEADING));
-            JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-            JPanel panel3 = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel panel3 = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
-            panel1.add(lblTestSuiteName);
-            panel1.add(txtTestSuiteName);
-            panel3.add(lblTestSuiteLocation);
-            panel3.add(txtTestSuiteFolder);
+        panel1.add(lblTestSuiteName);
+        panel1.add(txtTestSuiteName);
+        panel3.add(lblTestSuiteLocation);
+        panel3.add(txtTestSuiteFolder);
 
-            dialog = new JDialog(this, "New Test Suite", true);
-            dialog.getAlignmentX();
-            ImageIcon icon = new ImageIcon("src/main/resources/image/letter-z.png");
-            dialog.setIconImage(icon.getImage());
-            dialog.pack();
+        dialog.setTitle("New Test Suite");
 
-            dialog.setBounds(400, 200, 400, 400);
+        //fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        txtTestSuiteFolder.setText(dirPath.getText());
 
-            dialog.setLayout(new BorderLayout());
+        JButton btnCreateTestSuite = new JButton("Create");
+        btnCreateTestSuite.setName("btnCreateTestSuite");
+        btnCreateTestSuite.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                Pattern pattern = Pattern.compile("(?i)(^[a-z])\\w{1,29}$");
+                Matcher m = pattern.matcher(txtTestSuiteName.getText());
 
-            txtTestSuiteFolder.setText(dirPath.getText());
+                if (txtTestSuiteName.getText().trim().isEmpty()) {
+                    getToolkit().beep();
+                    JOptionPane.showConfirmDialog(null, "Test Suite name can't be empty", "Confirm", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE);
+                } else if (m.matches() == false) {
+                    getToolkit().beep();
+                    JOptionPane.showMessageDialog(null, "Test Suite name can not contain whitespace and invalid charactors");
+                } else {
+                    File folder1 = new File(txtTestSuiteFolder.getText() + File.separator + txtTestSuiteName.getText());
+                    if (!folder1.exists()) {
+                        folder1.mkdir();
 
-            JButton btnCreateTestSuite = new JButton("Create");
-            btnCreateTestSuite.setName("btnCreateTestSuite");
-            btnCreateTestSuite.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+                        File source = new File("template/testCaseFileTemplate/NavExpo.csv");
+                        File destination = new File(folder1 + "/" + txtTestSuiteName.getText() + ".csv");
 
-                    Pattern pattern = Pattern.compile("(?i)(^[a-z])\\w{1,29}$");
-                    Matcher m = pattern.matcher(txtTestSuiteName.getText());
+                        File source1 = new File("template/testCaseFileTemplate/NavExpo_data.csv");
+                        File destination1 = new File(folder1 + "/" + txtTestSuiteName.getText() + "_data" + ".csv");
 
-                    if (txtTestSuiteName.getText().trim().isEmpty()) {
-                        getToolkit().beep();
-                        JOptionPane.showConfirmDialog(null, "Test Suite name can't be empty", "Confirm", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE);
-                    } else if (m.matches() == false) {
-                        getToolkit().beep();
-                        JOptionPane.showMessageDialog(null, "Test Suite name can not contain whitespace and invalid charactors");
-                    } else {
-                        File folder1 = new File(txtTestSuiteFolder.getText() + File.separator + txtTestSuiteName.getText());
-                        if (!folder1.exists()) {
-                            folder1.mkdir();
+                        try {
+                            FileUtils.copyFile(source, destination);
+                            FileUtils.copyFile(source1, destination1);
+                            JOptionPane.showConfirmDialog(null, "Test Suite created Successfully", "Success", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                            dialog.dispose();
+                            btnPlay.setEnabled(true);
+                            btnOpenTestSuite.setEnabled(true);
+                            btnDeleteTestCase.setEnabled(true);
 
-                            File source = new File("C:/Zeen/template/testCaseFileTemplate/NavExpo.csv");
-                            File destination = new File(folder1 + "/" + txtTestSuiteName.getText() + ".csv");
+                            dirPath.setText(txtTestSuiteFolder.getText());
+                            dirPath.setVisible(false);
 
-                            File source1 = new File("C:/Zeen/template/testCaseFileTemplate/NavExpo_data.csv");
-                            File destination1 = new File(folder1 + "/" + txtTestSuiteName.getText() + "_data" + ".csv");
-
-                            try {
-                                FileUtils.copyFile(source, destination);
-                                FileUtils.copyFile(source1, destination1);
-                                JOptionPane.showConfirmDialog(null, "Test Suite created Successfully", "Success", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                                dialog.dispose();
-                                btnPlay.setEnabled(true);
-                                btnOpenTestSuite.setEnabled(true);
-                                btnDeleteTestCase.setEnabled(true);
-
-                                dirPath.setText(txtTestSuiteFolder.getText());
-                                dirPath.setVisible(false);
-
-                                Desktop.getDesktop().open(destination);
-                                Desktop.getDesktop().open(destination1);
-
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                        } else {
-                            getToolkit().beep();
-                            JOptionPane.showConfirmDialog(null, "Test Suite name already exists", "Confirm", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-                            txtTestSuiteName.selectAll();
-                            txtTestSuiteName.requestFocus();
+                            Desktop.getDesktop().open(destination);
+                            Desktop.getDesktop().open(destination1);
+                        } catch (IOException ex) {
+                            Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
                         }
+
+                    } else {
+                        getToolkit().beep();
+                        JOptionPane.showConfirmDialog(null, "Test Suite name already exists", "Confirm", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                        txtTestSuiteName.selectAll();
+                        txtTestSuiteName.requestFocus();
                     }
-
                 }
-            });
-            panel2.add(btnCreateTestSuite);
 
-            JButton btnCancelTestSuite = new JButton("Cancel");
-            btnCancelTestSuite.setName("btnCancelTestSuite");
-            btnCancelTestSuite.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dialog.dispose();
-                }
-            });
-            panel2.add(btnCancelTestSuite);
+            }
+        });
+        panel2.add(btnCreateTestSuite);
 
-            JPanel compoPanel = new JPanel(new GridLayout(2, 0));
+        JButton btnCancelTestSuite = new JButton("Cancel");
+        btnCancelTestSuite.setName("btnCancelTestSuite");
+        btnCancelTestSuite.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
+        panel2.add(btnCancelTestSuite);
 
-            compoPanel.add(panel1);
-            compoPanel.add(panel3);
+        JPanel compoPanel = new JPanel(new GridLayout(2, 0));
 
-            dialog.add(compoPanel, BorderLayout.NORTH);
-            dialog.add(panel2, BorderLayout.SOUTH);
+        compoPanel.add(panel1);
+        compoPanel.add(panel3);
 
-            dialog.setSize(widthOfScreen / 3 - 46, heightOfScreen / 5 + 10);
-            dialog.setVisible(true);
+        dialog.add(compoPanel, BorderLayout.NORTH);
+        dialog.add(panel2, BorderLayout.SOUTH);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        dialog.setSize(widthOfScreen / 3 - 46, heightOfScreen / 5 + 10);
+        dialog.setVisible(true);
 
 
     }//GEN-LAST:event_btnCreateTCActionPerformed
@@ -1529,27 +1524,30 @@ public class AppFrame extends javax.swing.JFrame {
 
         new HandlingWindow(winTitle);
 
+       
+            Robot r;
         try {
-            Robot r = new Robot();
-            r.keyPress(KeyEvent.VK_R);
+            r = new Robot();
+             r.keyPress(KeyEvent.VK_R);
             r.keyRelease(KeyEvent.VK_R);
             r.keyPress(KeyEvent.VK_ENTER);
 
             btnPlay.setVisible(false);
             btnPause.setVisible(true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (AWTException ex) {
+            Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+           
+
+       
 
     }//GEN-LAST:event_btnRepLastActionPerformed
 
     private void btnOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenProjectActionPerformed
         // TODO add your handling code here:
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        
 
-            fileChooser = new JFileChooser();
+            
             fileChooser.setCurrentDirectory(fileChooser.getSelectedFile());
             //OPen the JFileChooser window
             fileChooser.setDialogTitle("Open Test Project");
@@ -1620,9 +1618,7 @@ public class AppFrame extends javax.swing.JFrame {
                 btnDeleteTestCase.setEnabled(true);
 
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+       
 
     }//GEN-LAST:event_btnOpenProjectActionPerformed
 
@@ -1677,73 +1673,68 @@ public class AppFrame extends javax.swing.JFrame {
 
     private void btnDeleteTestCaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteTestCaseActionPerformed
         // TODO add your handling code here:
-        try {
 
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File(dirPath.getText()));
-            fileChooser.setApproveButtonText("Delete");
+        fileChooser.setCurrentDirectory(new File(dirPath.getText()));
+        fileChooser.setApproveButtonText("Delete");
 
-            if (approveButton == null) {
-                approveButton = lookupButton(fileChooser, fileChooser.getUI().getApproveButtonText(fileChooser));
-                approveButton.setEnabled(false);
+        if (approveButton == null) {
+            approveButton = lookupButton(fileChooser, fileChooser.getUI().getApproveButtonText(fileChooser));
+            approveButton.setEnabled(false);
 
-            } else {
-                approveButton = lookupButton(fileChooser, fileChooser.getUI().getApproveButtonText(fileChooser));
-                approveButton.setEnabled(false);
-            }
+        } else {
+            approveButton = lookupButton(fileChooser, fileChooser.getUI().getApproveButtonText(fileChooser));
+            approveButton.setEnabled(false);
+        }
 
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-            fileChooser.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
+        fileChooser.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
 
-                        String newFile = evt.getNewValue().toString();
+                    String newFile = evt.getNewValue().toString();
 
-                        File mainFile = new File(newFile);
+                    File mainFile = new File(newFile);
 
-                        String stepFileName = mainFile + "/" + mainFile.getName() + ".csv";
-                        File stepFile = new File(stepFileName);
+                    String stepFileName = mainFile + "/" + mainFile.getName() + ".csv";
+                    File stepFile = new File(stepFileName);
 
-                        String dataFileName = mainFile + "/" + mainFile.getName() + "_data.csv";
-                        File dataFile = new File(dataFileName);
+                    String dataFileName = mainFile + "/" + mainFile.getName() + "_data.csv";
+                    File dataFile = new File(dataFileName);
 
-                        if (mainFile.isDirectory() && stepFile.exists() && dataFile.exists()) {
-                            approveButton.setEnabled(true);
-                        } else {
-
-                            approveButton.setEnabled(false);
-                        }
-
-                    }
-                }
-            });
-
-            fileChooser.setDialogTitle("delete Test Suite");
-            int response = fileChooser.showDialog(null, "Delete");
-            if (response == JFileChooser.APPROVE_OPTION) {
-                File DeltFile = fileChooser.getSelectedFile();
-
-                if (DeltFile.exists()) {
-                    if (DeltFile.isDirectory()) {
-                        File[] fs = DeltFile.listFiles();
-                        for (File ff : fs) {
-                            ff.delete();
-                        }
-
-                        DeltFile.delete();
-
-                        JOptionPane.showMessageDialog(null, "The Test Suite Deleted Successfully", "Confirm", JOptionPane.DEFAULT_OPTION);
+                    if (mainFile.isDirectory() && stepFile.exists() && dataFile.exists()) {
+                        approveButton.setEnabled(true);
                     } else {
 
+                        approveButton.setEnabled(false);
                     }
+
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        });
+
+        fileChooser.setDialogTitle("delete Test Suite");
+        int response = fileChooser.showDialog(null, "Delete");
+        if (response == JFileChooser.APPROVE_OPTION) {
+            File DeltFile = fileChooser.getSelectedFile();
+
+            if (DeltFile.exists()) {
+                if (DeltFile.isDirectory()) {
+                    File[] fs = DeltFile.listFiles();
+                    for (File ff : fs) {
+                        ff.delete();
+                    }
+
+                    DeltFile.delete();
+
+                    JOptionPane.showMessageDialog(null, "The Test Suite Deleted Successfully", "Confirm", JOptionPane.DEFAULT_OPTION);
+                } else {
+
+                }
+            }
         }
+
 
     }//GEN-LAST:event_btnDeleteTestCaseActionPerformed
 
@@ -1765,20 +1756,23 @@ public class AppFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         //user.FindWindow(null, winTitle);
-        try {
+        
             new HandlingWindow(winTitle);
             keyboardString("b");
 
-            Robot r = new Robot();
+            Robot r;
+        try {
+            r = new Robot();
             r.keyPress(KeyEvent.VK_ENTER);
             btnPause.setVisible(false);
             btnPlay.setVisible(true);
             btnPlay.setEnabled(false);
             btnContinue.setEnabled(false);
-        } catch (Exception e) {
-
-            e.printStackTrace();
+        } catch (AWTException ex) {
+            Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+           
+       
 
 
     }//GEN-LAST:event_btnPauseActionPerformed
@@ -1786,30 +1780,28 @@ public class AppFrame extends javax.swing.JFrame {
     private void btnOpenTestSuiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenTestSuiteActionPerformed
         // TODO add your handling code here:
 
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            fileChooser = new JFileChooser();
-            String pathOPenFile = dirPath.getText();
-            File pathSelectFile = new File(pathOPenFile);
+        String pathOPenFile = dirPath.getText();
+        File pathSelectFile = new File(pathOPenFile);
 
-            fileChooser.setCurrentDirectory(pathSelectFile);
+        fileChooser.setCurrentDirectory(pathSelectFile);
 
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            fileChooser.setDialogTitle("Open Test Suite File");
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fileChooser.setDialogTitle("Open Test Suite File");
 
-            int res = fileChooser.showOpenDialog(null);
-            if (res == JFileChooser.APPROVE_OPTION) {
-                try {
+        int res = fileChooser.showOpenDialog(null);
+        if (res == JFileChooser.APPROVE_OPTION) {
 
-                    File selectFile = fileChooser.getSelectedFile();
-                    Desktop.getDesktop().open(selectFile);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            File selectFile = fileChooser.getSelectedFile();
+
+            try {
+
+                Desktop.getDesktop().open(selectFile);
+            } catch (IOException ex) {
+                Logger.getLogger(AppFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
         }
+
     }//GEN-LAST:event_btnOpenTestSuiteActionPerformed
 
     private void btnOpenTestSuiteMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOpenTestSuiteMouseExited
